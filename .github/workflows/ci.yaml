@@ -28,7 +28,7 @@ jobs:
           cache-dependency-path: "frontend/pnpm-lock.yaml"
       - name: Install Task
         uses: go-task/setup-task@v1
-      - run: task build-frontend
+      - run: task build:frontend
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v6
         with:
