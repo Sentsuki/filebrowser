@@ -1,0 +1,217 @@
+# File Browser 配置文件示例
+# 配置文件可以放在以下位置：
+# - 当前目录: ./.filebrowser.{yaml,yml,json,toml}
+# - 用户主目录: ~/.filebrowser.{yaml,yml,json,toml}
+# - 系统目录: /etc/filebrowser/.filebrowser.{yaml,yml,json,toml}
+#
+# 也可以通过 --config 或 -c 参数指定配置文件路径
+# 所有配置项都可以通过环境变量覆盖，格式为 FB_<配置项名称大写>
+# 例如: FB_PORT=9090 FB_ADDRESS=0.0.0.0
+
+# ==================== 数据库配置 ====================
+# 数据库文件路径（默认: ./filebrowser.db）
+database: ./filebrowser.db
+
+# ==================== 服务器配置 ====================
+# 监听地址（默认: 127.0.0.1）
+address: 127.0.0.1
+
+# 监听端口（默认: 8080）
+port: 8080
+
+# Unix Socket 路径（与 address/port/cert/key 互斥，不能同时使用）
+# socket: /var/run/filebrowser.sock
+
+# Unix Socket 文件权限（默认: 0666）
+# socketPerm: 0666
+
+# 根目录路径（文件浏览的根目录，默认: .）
+root: .
+
+# 基础 URL 路径（用于反向代理，例如: /filebrowser）
+baseURL: ""
+
+# TLS 证书文件路径（启用 HTTPS）
+# cert: /path/to/cert.pem
+
+# TLS 密钥文件路径（启用 HTTPS）
+# key: /path/to/key.pem
+
+# 日志输出位置（stdout, stderr, 文件路径或空字符串禁用日志）
+log: stdout
+
+# 用户会话过期时间（默认: 2h）
+# 支持的时间单位: ns, us, ms, s, m, h
+tokenExpirationTime: 2h
+
+# ==================== 功能开关 ====================
+# 禁用缩略图生成（默认: false）
+disableThumbnails: false
+
+# 禁用预览图片调整大小（默认: false）
+disablePreviewResize: false
+
+# 禁用命令执行功能（默认: true，强烈建议保持禁用）
+# 警告：启用此功能存在安全风险！
+disableExec: true
+
+# 禁用通过文件头检测文件类型（默认: false）
+disableTypeDetectionByHeader: false
+
+# ==================== 缓存配置 ====================
+# 文件缓存目录（为空则禁用缓存）
+cacheDir: ""
+
+# 图片处理器数量（默认: 4）
+imageProcessors: 4
+
+# ==================== 认证配置 ====================
+# 认证方式: json, proxy, hook, noauth
+# - json: 标准的用户名/密码认证（默认）
+# - proxy: 通过 HTTP 头进行代理认证
+# - hook: 通过外部命令进行认证
+# - noauth: 无需认证
+auth:
+  method: json
+  
+  # 代理认证的 HTTP 头名称（当 method=proxy 时使用）
+  # header: X-Forwarded-User
+  
+  # Hook 认证的命令（当 method=hook 时使用）
+  # command: /path/to/auth/script.sh
+  
+  # ReCaptcha 配置（用于防止暴力破解）
+  recaptcha:
+    # ReCaptcha 服务器地址（中国用户可使用 recaptcha.net）
+    host: https://www.google.com
+    # ReCaptcha 站点密钥
+    key: ""
+    # ReCaptcha 密钥
+    secret: ""
+
+# ==================== 用户注册配置 ====================
+# 允许用户自行注册（默认: false）
+signup: false
+
+# 隐藏登录按钮（默认: false）
+hideLoginButton: false
+
+# 自动创建用户主目录（默认: false）
+createUserDir: false
+
+# 用户主目录基础路径（默认: /users）
+# userHomeBasePath: /users
+
+# 最小密码长度（默认: 12）
+minimumPasswordLength: 12
+
+# ==================== 品牌定制 ====================
+branding:
+  # 自定义应用名称（替换 "File Browser"）
+  name: ""
+  
+  # 自定义主题
+  theme: ""
+  
+  # 自定义主题颜色
+  color: ""
+  
+  # 自定义文件目录（包含图片和自定义样式）
+  files: ""
+  
+  # 禁用外部链接（如 GitHub 链接）
+  disableExternal: false
+  
+  # 禁用磁盘使用百分比图表
+  disableUsedPercentage: false
+
+# ==================== TUS 上传配置 ====================
+# TUS 是一个可恢复的文件上传协议
+tus:
+  # 分块大小（字节，默认: 10485760 = 10MB）
+  chunkSize: 10485760
+  
+  # 重试次数（默认: 5）
+  retryCount: 5
+
+# ==================== Shell 命令配置 ====================
+# 其他命令应附加到的 shell 命令
+shell: ""
+
+# ==================== 文件权限配置 ====================
+# 新文件的权限模式（八进制，默认: 0640）
+fileMode: 0640
+
+# 新目录的权限模式（八进制，默认: 0750）
+dirMode: 0750
+
+# ==================== 全局命令配置 ====================
+# 全局可用的命令映射
+# commands:
+#   git: ["git"]
+#   npm: ["npm"]
+
+# ==================== 访问规则配置 ====================
+# 全局访问规则（允许或禁止访问特定路径）
+# rules:
+#   - regex: false
+#     allow: false
+#     path: /\.git
+#   - regex: true
+#     allow: false
+#     path: ".*\\.tmp$"
+#     regexp:
+#       raw: ".*\\.tmp$"
+
+# ==================== 用户默认配置 ====================
+# 新用户的默认设置
+defaults:
+  # 默认作用域（用户可访问的目录，相对于 root）
+  scope: .
+  
+  # 默认语言（en, zh-cn, zh-tw 等）
+  locale: en
+  
+  # 默认视图模式（list 或 mosaic）
+  viewMode: list
+  
+  # 启用单击模式（默认: false）
+  singleClick: false
+  
+  # 使用绝对时间格式（true）还是相对时间（false）
+  dateFormat: false
+  
+  # 隐藏点文件（默认: false）
+  hideDotfiles: false
+  
+  # Ace 编辑器语法高亮主题
+  aceEditorTheme: ""
+  
+  # 默认排序方式
+  sorting:
+    # 排序字段（name, size, modified）
+    by: name
+    # 升序排序（默认: false）
+    asc: false
+  
+  # 默认权限
+  perm:
+    # 管理员权限（默认: false）
+    admin: false
+    # 执行命令权限（默认: true）
+    execute: true
+    # 创建文件/文件夹权限（默认: true）
+    create: true
+    # 重命名权限（默认: true）
+    rename: true
+    # 修改文件权限（默认: true）
+    modify: true
+    # 删除权限（默认: true）
+    delete: true
+    # 分享权限（默认: true）
+    share: true
+    # 下载权限（默认: true）
+    download: true
+  
+  # 默认可用命令列表
+  commands: []
