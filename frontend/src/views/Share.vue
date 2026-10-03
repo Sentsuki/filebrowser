@@ -360,7 +360,7 @@ const link = computed(() => (req.value ? api.getDownloadURL(req.value) : ""));
 const raw = computed(() => {
   if (!req.value || !req.value.items[fileStore.selected[0]]) return "";
   return createURL(
-    `api/public/dl/${hash.value}${req.value.items[fileStore.selected[0]].path}`,
+    `share/_/api/dl/${hash.value}${req.value.items[fileStore.selected[0]].path}`,
     { token: token.value }
   );
 });

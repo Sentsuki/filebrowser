@@ -21,10 +21,6 @@ filebrowser config set --branding.name "My Name" \
   --branding.disableExternal
 ```
 
-> [!NOTE] 
->
-> If you are using Docker, you need to mount a volume with the `branding` directory in order for it to be accessible from within the container.
-
 ### Custom Icons
 
 To replace the default logotype and favicons, you need to create an `img` directory under the branding directory. The structure of this directory must mimic the one from the [default logotypes](https://github.com/filebrowser/filebrowser/tree/master/frontend/public/img):

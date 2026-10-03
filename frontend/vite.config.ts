@@ -37,6 +37,7 @@ export default defineConfig(({ command }) => {
             ws: true,
           },
           "/api": "http://127.0.0.1:8080",
+          "/share/_": "http://127.0.0.1:8080",
         },
       },
     };

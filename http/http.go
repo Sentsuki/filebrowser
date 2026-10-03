@@ -12,6 +12,11 @@ import (
 	"github.com/filebrowser/filebrowser/v2/storage"
 )
 
+// publicSharePrefix holds the routes public share recipients need besides the
+// share page. "_" can never collide with a share hash, which is always the
+// 8-character base64 encoding of 6 random bytes.
+const publicSharePrefix = "/share/_"
+
 type modifyRequest struct {
 	What            string   `json:"what"`             // Answer to: what data type?
 	Which           []string `json:"which"`            // Answer to: which fields?
@@ -43,8 +48,15 @@ func NewHandler(
 	}
 
 	r.HandleFunc("/health", healthHandler)
-	r.PathPrefix("/static").Handler(static)
 	r.NotFoundHandler = index
+
+	// Everything an anonymous share recipient needs lives under "/share/": the
+	// share page itself (/share/<hash>, served by index), the frontend assets
+	// and the public share API. An access proxy in front of File Browser can
+	// therefore exempt that single prefix and protect everything else.
+	r.PathPrefix(publicSharePrefix + "/static/").Handler(static)
+	r.PathPrefix(publicSharePrefix + "/api/dl/").Handler(monkey(publicDlHandler, publicSharePrefix+"/api/dl/")).Methods("GET")
+	r.PathPrefix(publicSharePrefix + "/api/share/").Handler(monkey(publicShareHandler, publicSharePrefix+"/api/share/")).Methods("GET")
 
 	api := r.PathPrefix("/api").Subrouter()
 
@@ -88,10 +100,6 @@ func NewHandler(
 	api.PathPrefix("/command").Handler(monkey(commandsHandler, "/api/command")).Methods("GET")
 	api.PathPrefix("/search").Handler(monkey(searchHandler, "/api/search")).Methods("GET")
 	api.PathPrefix("/subtitle").Handler(monkey(subtitleHandler, "/api/subtitle")).Methods("GET")
-
-	public := api.PathPrefix("/public").Subrouter()
-	public.PathPrefix("/dl").Handler(monkey(publicDlHandler, "/api/public/dl/")).Methods("GET")
-	public.PathPrefix("/share").Handler(monkey(publicShareHandler, "/api/public/share/")).Methods("GET")
 
 	return stripPrefix(server.BaseURL, r), nil
 }
