@@ -36,7 +36,7 @@ func handleWithStaticData(w http.ResponseWriter, _ *http.Request, d *data, fSys 
 		"Color":                 d.settings.Branding.Color,
 		"BaseURL":               d.server.BaseURL,
 		"Version":               version.Version,
-		"StaticURL":             path.Join(d.server.BaseURL, "/static"),
+		"StaticURL":             path.Join(d.server.BaseURL, publicSharePrefix, "static"),
 		"Signup":                d.settings.Signup,
 		"NoAuth":                d.settings.AuthMethod == auth.MethodNoAuth,
 		"AuthMethod":            d.settings.AuthMethod,
@@ -177,7 +177,7 @@ func getStaticHandlers(store *storage.Storage, server *settings.Server, assetsFs
 		}
 
 		return 0, nil
-	}, "/static/", store, server)
+	}, publicSharePrefix+"/static/", store, server)
 
 	return index, static
 }
